@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>體積的量度 - 香港小學數學</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background-color: #f0f4f8;
+      color: #333;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+      touch-action: manipulation;
+    }
+
+    header {
+      background-color: #2b5278;
+      color: white;
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    header h1 { font-size: 1.5rem; font-weight: 600; }
+
+    .lang-btn {
+      background-color: transparent;
+      border: 1px solid white;
+      color: white;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+
+    .lang-btn:hover { background-color: rgba(255, 255, 255, 0.2); }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container { width: 100%; max-width: 900px; margin: 0 auto; }
+
+    .page-title {
+      text-align: center;
+      font-size: 1.8rem;
+      color: #2b5278;
+      margin-bottom: 30px;
+      font-weight: bold;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      justify-content: center;
+    }
+
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+      text-align: center;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      border: 2px solid transparent;
+      min-height: 150px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      max-width: 400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .card:hover, .card:active {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      border-color: #4a90e2;
+    }
+
+    .card h3 { font-size: 1.4rem; color: #1a365d; margin-bottom: 12px; }
+    .card p { color: #666; font-size: 0.95rem; line-height: 1.5; }
+
+    .quiz-wrapper { max-width: 760px; margin: 0 auto; width: 100%; }
+
+    .back-nav-btn {
+      background: white;
+      border: 1px solid #cbd5e0;
+      color: #4a5568;
+      padding: 10px 18px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-bottom: 15px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+      transition: all 0.2s;
+      min-height: 44px;
+    }
+
+    .back-nav-btn:hover { background-color: #edf2f7; color: #2b6cb0; }
+
+    .quiz-card {
+      background: white;
+      border-radius: 16px;
+      padding: 35px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+      width: 100%;
+    }
+
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      border-bottom: 2px solid #edf2f7;
+      padding-bottom: 12px;
+    }
+
+    .quiz-progress { font-size: 1.1rem; font-weight: bold; color: #3182ce; }
+
+    .unit-tag {
+      background-color: #ebf8ff;
+      color: #2b6cb0;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.95rem;
+      font-weight: bold;
+    }
+
+    .tier-tag {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 0.85rem;
+      font-weight: bold;
+      margin-left: 8px;
+    }
+
+    .tier-easy { background-color: #c6f6d5; color: #22543d; }
+    .tier-med { background-color: #feebc8; color: #744210; }
+    .tier-hard { background-color: #fed7d7; color: #742a2a; }
+
+    .question-display {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 15px 0 25px 0;
+      min-height: 220px;
+    }
+
+    .q-story-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #2d3748;
+      margin-bottom: 20px;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    .svg-container {
+      background-color: #f8fafc;
+      border: 2px dashed #cbd5e0;
+      border-radius: 16px;
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      max-width: 480px;
+      min-height: 250px;
+      overflow: hidden;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin: 20px 0;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #2d3748;
+    }
+
+    .number-input {
+      width: 120px;
+      padding: 12px;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-align: center;
+      border: 2.5px solid #cbd5e0;
+      border-radius: 12px;
+      outline: none;
+      color: #333;
+      transition: border-color 0.2s;
+    }
+
+    .number-input:focus {
+      border-color: #3182ce;
+      box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.2);
+    }
+    
+    /* Breakdown Diagram Styles */
+    .breakdown-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+      flex-wrap: wrap;
+    }
+
+    .thought-bubble {
+      background-color: #fff1f2;
+      border-radius: 40px;
+      padding: 15px;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.06);
+      position: relative;
+      border: 3px solid #fda4af;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .thought-dots {
+      display: flex;
+      gap: 8px;
+      align-items: flex-end;
+      padding-bottom: 20px;
+    }
+
+    .dot {
+      background-color: #fca5a5;
+      border-radius: 50%;
+      opacity: 0.8;
+    }
+    .dot:nth-child(1) { width: 10px; height: 10px; }
+    .dot:nth-child(2) { width: 18px; height: 18px; }
+
+    .shake-animation { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; }
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-2px, 0, 0); }
+      20%, 80% { transform: translate3d(4px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+      40%, 60% { transform: translate3d(6px, 0, 0); }
+    }
+
+    .btn {
+      display: inline-block;
+      width: 100%;
+      padding: 14px;
+      font-size: 1.15rem;
+      font-weight: bold;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+      text-align: center;
+      min-height: 48px;
+    }
+    .btn:active { transform: scale(0.99); }
+    .btn-primary { background-color: #3182ce; color: white; }
+    .btn-primary:hover { background-color: #2b6cb0; }
+    .btn-success { background-color: #38a169; color: white; }
+    .btn-success:hover { background-color: #2f855a; }
+    .btn-purple { background-color: #8e44ad; color: white; margin-bottom: 10px; }
+    .btn-purple:hover { background-color: #7d3c98; }
+    .btn-sky { background-color: #38bdf8; color: white; margin-bottom: 10px; }
+    .btn-sky:hover { background-color: #0284c7; }
+    .btn-gray { background-color: #7f8c8d; color: white; }
+    .btn-gray:hover { background-color: #636e72; }
+    .btn:disabled { background-color: #cbd5e0; cursor: not-allowed; transform: none; }
+
+    .feedback-box {
+      margin-top: 20px;
+      padding: 18px;
+      border-radius: 12px;
+      text-align: left;
+      font-size: 1.05rem;
+      line-height: 1.6;
+    }
+    .feedback-success { background-color: #c6f6d5; color: #22543d; border: 1px solid #9ae6b4; text-align: center; }
+    .feedback-warning { background-color: #feebc8; color: #744210; border: 1px solid #fbd38d; }
+    .feedback-danger { background-color: #fff5f5; color: #742a2a; border: 1px solid #feb2b2; }
+
+    .report-card {
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 680px;
+      margin: 0 auto;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+    }
+    .report-title { text-align: center; color: #3182ce; font-size: 1.6rem; margin-bottom: 20px; font-weight: bold; }
+    .report-section { background-color: #f8fafc; border-radius: 10px; padding: 14px 20px; margin-bottom: 16px; }
+    .report-row { display: flex; justify-content: space-between; padding: 6px 0; color: #4a5568; font-size: 0.98rem; }
+    .report-row.dashed { border-bottom: 1px dashed #cbd5e0; }
+    .report-val { font-weight: bold; }
+    .val-green { color: #276749; }
+    .val-red { color: #9b2c2c; }
+    .val-blue { color: #0284c7; }
+    .section-label { font-weight: bold; color: #2d3748; margin: 18px 0 10px 0; font-size: 1.05rem; }
+    .list-box { border-radius: 10px; padding: 15px; margin-bottom: 15px; background-color: #f7fafc; }
+    .list-title { font-weight: bold; font-size: 1.05rem; display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+    .item-card-correct { background: #f0fff4; border: 1px solid #c6f6d5; border-radius: 8px; padding: 10px 16px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem; color: #22543d; font-weight: 500; }
+    .item-card-wrong { background: #fff5f5; border: 1px solid #fed7d7; border-radius: 8px; padding: 10px 16px; margin-bottom: 8px; flex-direction: column; align-items: flex-start; font-size: 0.95rem; color: #9b2c2c; font-weight: 500; gap: 5px; }
+    .wrong-ans-detail { font-size: 0.9rem; color: #742a2a; opacity: 0.9; }
+
+    .modal-overlay {
+      position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: flex; justify-content: center; align-items: center;
+      z-index: 1000; opacity: 0; pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .modal-overlay.active { opacity: 1; pointer-events: auto; }
+    .modal-box { background: white; padding: 25px; border-radius: 12px; max-width: 420px; width: 90%; text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
+    .modal-box h3 { margin-bottom: 12px; color: #2b5278; }
+    .modal-box p { margin-bottom: 20px; color: #4a5568; line-height: 1.5; }
+    .modal-buttons { display: flex; gap: 10px; }
+
+    .hidden { display: none !important; }
+
+    @media (max-width: 768px) {
+      .quiz-card { padding: 22px 16px; }
+      .q-story-title { font-size: 1.15rem; }
+      .input-group { flex-direction: column; gap: 10px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1 id="header-title">體積的量度</h1>
+    <button id="btn-lang" class="lang-btn">English</button>
+  </header>
+
+  <main>
+    <div class="container">
+      <div id="page-home">
+        <h2 id="home-subtitle" class="page-title">請選擇學習單元</h2>
+        <div class="menu-grid">
+          <div class="card" id="btn-unit1" onclick="startQuiz()">
+            <h3 id="title-unit1">單元一：數粒立體</h3>
+            <p id="desc-opt1">透過觀察由數粒組成的立體圖形，計算並認識立體的體積。</p>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-quiz" class="hidden">
+        <div class="quiz-wrapper">
+          <button class="back-nav-btn" id="btn-back">
+            <span id="lbl-back-btn">← 返回階段選擇</span>
+          </button>
+
+          <div class="quiz-card">
+            <div class="quiz-header">
+              <div>
+                <span id="quiz-mode-name" class="unit-tag">單元一：數粒立體</span>
+                <span id="quiz-tier-tag" class="tier-tag tier-easy">初階</span>
+              </div>
+              <span id="quiz-progress-text" class="quiz-progress">題目 1 / 10</span>
+            </div>
+
+            <div id="question-display-area" class="question-display">
+              <div id="q-text" class="q-story-title"></div>
+              <div id="svg-wrap" class="svg-container"></div>
+            </div>
+
+            <div id="input-section" style="text-align: center; margin-bottom: 25px;">
+              <div class="input-group">
+                <span id="lbl-vol-prefix">體積是：</span>
+                <input type="text" inputmode="numeric" pattern="\d*" id="input-answer" class="number-input" placeholder="?">
+                <span>cm³</span>
+              </div>
+            </div>
+
+            <div id="action-area">
+              <button id="btn-submit" class="btn btn-primary">提交答案</button>
+              <button id="btn-next" class="btn btn-success hidden">下一題 ➔</button>
+            </div>
+
+            <div id="feedback-area" class="hidden"></div>
+          </div>
+        </div>
+      </div>
+
+      <div id="page-report" class="hidden">
+        <div id="report-card-to-capture" class="report-card">
+          <h2 id="report-main-title" class="report-title">練習完成！表現分析報告</h2>
+          <div class="report-section">
+            <div class="report-row dashed"><span id="lbl-start-time">開始時間：</span><span id="val-start-time" class="report-val">--</span></div>
+            <div class="report-row dashed"><span id="lbl-end-time">完成時間：</span><span id="val-end-time" class="report-val">--</span></div>
+            <div class="report-row"><span id="lbl-duration">總用時：</span><span id="val-duration" class="report-val val-blue">--</span></div>
+          </div>
+          <div class="report-section">
+            <div class="report-row dashed"><span id="lbl-total-correct">總答對題數：</span><span id="val-correct-count" class="report-val val-green">0 / 10</span></div>
+            <div class="report-row"><span id="lbl-accuracy">整體正確率：</span><span id="val-accuracy" class="report-val">0%</span></div>
+          </div>
+          <div class="section-label" id="lbl-mastery-title">各難度掌握度分析</div>
+          <div class="report-section">
+            <div class="report-row dashed"><span id="lbl-tier1-mastery">初階 (7-12粒)：</span><span id="val-tier1-mastery" class="report-val">0 / 0</span></div>
+            <div class="report-row dashed"><span id="lbl-tier2-mastery">中階 (13-16粒)：</span><span id="val-tier2-mastery" class="report-val">0 / 0</span></div>
+            <div class="report-row"><span id="lbl-tier3-mastery">高階 (不同單位體積)：</span><span id="val-tier3-mastery" class="report-val">0 / 0</span></div>
+          </div>
+          <div class="list-box correct-bg">
+            <div class="list-title val-green"><span>☑</span> <span id="lbl-correct-title">答對的題目</span></div>
+            <div id="correct-list-container"></div>
+          </div>
+          <div class="list-box wrong-bg">
+            <div class="list-title val-red"><span>✕</span> <span id="lbl-wrong-title">答錯 / 需要協助的題目</span></div>
+            <div id="wrong-list-container"></div>
+          </div>
+          <div data-html2canvas-ignore="true" style="margin-top: 20px;">
+            <button class="btn btn-purple" id="btn-download"><span id="lbl-btn-download">💾 下載報告圖片</span></button>
+            <button class="btn btn-sky" id="btn-retry"><span id="lbl-btn-retry">🔄 我想再試</span></button>
+            <button class="btn btn-gray" id="btn-home"><span id="lbl-btn-home">回到主頁重新選擇</span></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <div id="custom-modal" class="modal-overlay">
+    <div class="modal-box">
+      <h3 id="modal-title">標題</h3>
+      <p id="modal-msg">內容訊息</p>
+      <div class="modal-buttons" id="modal-btn-area">
+        <button id="modal-cancel-btn" class="btn btn-gray" style="flex: 1;">取消</button>
+        <button id="modal-confirm-btn" class="btn btn-primary" style="flex: 1;">確定</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://mathteacher1618.github.io/my_fixes/ipad_fix.js"></script>
+  <script>
+    const i18n = {
+      zh: {
+        headerTitle: "體積的量度", langBtn: "English", homeSubtitle: "請選擇學習單元",
+        titleUnit1: "單元一：數粒立體", descOpt1: "透過觀察由數粒組成的立體圖形，計算並認識立體的體積。",
+        unit1: "單元一：數粒立體", tierEasy: "初階", tierMed: "中階", tierHard: "高階", qProgress: "題目",
+        questionLabel: "第 {n} 題", ansLabel: "答案", yourAnsLabel: "你的回答", correctAnsLabel: "正確答案",
+        backBtn: "← 返回階段選擇", submitBtn: "提交答案", nextBtn: "下一題 ➔", volPrefix: "體積是：",
+        praise: ["太棒了！答對了！🌟", "計算非常準確！👏", "答對了！空間感很好！🎉", "真聰明！觀察非常仔細！💪"],
+        encourage: ["再試一次！仔細數數看被遮擋的數粒！", "沒關係，重新算一算總共有多少粒！", "加油！注意每個數粒的體積大小！"],
+        noWrong: "太厲害了！沒有答錯的題目！", noCorrect: "無答對題目",
+        reportTitle: "練習完成！表現分析報告", startTime: "開始時間：", endTime: "完成時間：", durationTime: "總用時：",
+        totalCorrect: "總答對題數：", accuracy: "整體正確率：", masteryTitle: "各難度掌握度分析",
+        tier1Mastery: "初階 (7-12粒)：", tier2Mastery: "中階 (13-16粒)：", tier3Mastery: "高階 (不同單位體積)：",
+        correctTitle: "答對的題目", wrongTitle: "答錯 / 需要協助的題目",
+        btnDownload: "💾 下載報告圖片", btnRetry: "🔄 我想再試", btnHome: "回到主頁重新選擇",
+        modalReturnTitle: "返回階段選擇", modalReturnMsg: "確定要返回主選單嗎？目前的答題進度將不會被保存。",
+        stepTitle: "解題思路：", emptyInputMsg: "請輸入答案！",
+        qTextEasyMed: "以下的立體由體積是 1 cm³ 的數粒砌成，找出該立體的體積。",
+        qTextHardVol: "以下的立體由體積是 {v} cm³ 的數粒砌成，找出該立體的體積。",
+        qTextHardEdge: "以下的立體由邊長 {e} cm 的數粒砌成，找出該立體的體積。",
+        cubeCount: "數粒數量", volumePerCube: "每粒體積", totalVol: "總體積"
+      },
+      en: {
+        headerTitle: "Measuring Volume", langBtn: "繁體中文", homeSubtitle: "Please Select a Unit",
+        titleUnit1: "Unit 1: Counting Cubes", descOpt1: "Find the volume of 3D shapes made of cubic blocks.",
+        unit1: "Unit 1: Counting Cubes", tierEasy: "Basic", tierMed: "Intermediate", tierHard: "Advanced", qProgress: "Question",
+        questionLabel: "Q{n}", ansLabel: "Ans", yourAnsLabel: "Your Ans", correctAnsLabel: "Correct Ans",
+        backBtn: "← Back to Home", submitBtn: "Submit Answer", nextBtn: "Next Question ➔", volPrefix: "Volume is:",
+        praise: ["Great job! That's correct! 🌟", "Accurate calculation! 👏", "Correct! Good spatial sense! 🎉", "Awesome! 💪"],
+        encourage: ["Try again! Count the hidden cubes carefully!", "Take another look at the total number of cubes!", "Keep going! Note the volume of each cube!"],
+        noWrong: "Amazing! No incorrect answers!", noCorrect: "No correct questions",
+        reportTitle: "Practice Completed! Performance Report", startTime: "Start Time:", endTime: "Completion Time:", durationTime: "Time Taken:",
+        totalCorrect: "Total Correct:", accuracy: "Overall Accuracy:", masteryTitle: "Difficulty Level Mastery",
+        tier1Mastery: "Basic (7-12 cubes):", tier2Mastery: "Intermediate (13-16 cubes):", tier3Mastery: "Advanced (Varying unit vol):",
+        correctTitle: "Correct Questions", wrongTitle: "Incorrect / Needs Assistance",
+        btnDownload: "💾 Download Report", btnRetry: "🔄 Try Again", btnHome: "Back to Home",
+        modalReturnTitle: "Return to Stage Selection", modalReturnMsg: "Are you sure you want to return? Current progress will be lost.",
+        stepTitle: "Solution Breakdown:", emptyInputMsg: "Please enter an answer!",
+        qTextEasyMed: "The solid is made of cubes with a volume of 1 cm³. Find its volume.",
+        qTextHardVol: "The solid is made of cubes with a volume of {v} cm³. Find its volume.",
+        qTextHardEdge: "The solid is made of cubes with an edge length of {e} cm. Find its volume.",
+        cubeCount: "Number of cubes", volumePerCube: "Volume per cube", totalVol: "Total Volume"
+      }
+    };
+
+    let currentLang = 'zh';
+    let questions = [], currentQIndex = 0, wrongAttempts = 0, records = [];
+    let startTimeObj = null, modalActionCallback = null;
+    let generatedSignatures = new Set();
+    
+    // Cube colors for variety (Solid colors, no transparency)
+    const palettes = [
+      { top: "#d1fae5", left: "#a7f3d0", right: "#6ee7b7", stroke: "#059669" }, // Mint
+      { top: "#e0f2fe", left: "#bae6fd", right: "#7dd3fc", stroke: "#0284c7" }, // Sky blue
+      { top: "#fce7f3", left: "#fbcfe8", right: "#f9a8d4", stroke: "#db2777" }, // Pink
+      { top: "#fef9c3", left: "#fef08a", right: "#fde047", stroke: "#ca8a04" }, // Yellow
+      { top: "#f3e8ff", left: "#e9d5ff", right: "#d8b4fe", stroke: "#9333ea" }, // Purple
+      { top: "#ffedd5", left: "#fed7aa", right: "#fdba74", stroke: "#ea580c" }  // Orange
+    ];
+
+    window.onload = function() {
+      document.getElementById('btn-lang').addEventListener('click', toggleLanguage);
+      document.getElementById('btn-back').addEventListener('click', askReturnHome);
+      document.getElementById('btn-submit').addEventListener('click', checkAnswer);
+      document.getElementById('btn-next').addEventListener('click', nextQuestion);
+      document.getElementById('btn-download').addEventListener('click', downloadReportImage);
+      document.getElementById('btn-retry').addEventListener('click', startQuiz);
+      document.getElementById('btn-home').addEventListener('click', goHome);
+      document.getElementById('modal-cancel-btn').addEventListener('click', closeModal);
+      document.getElementById('modal-confirm-btn').addEventListener('click', confirmModalAction);
+      
+      const inputAns = document.getElementById('input-answer');
+      // Allow enter key submission
+      inputAns.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+          if (!document.getElementById('btn-submit').classList.contains('hidden')) checkAnswer();
+          else if (!document.getElementById('btn-next').classList.contains('hidden')) nextQuestion();
+        }
+      });
+      
+      // Prevent non-numeric input for absolute control over scrolling/typing
+      inputAns.addEventListener('input', function(e) {
+        this.value = this.value.replace(/[^0-9]/g, '');
+      });
+    };
+
+    // Shape Generation Logic
+    function getShapeSignature(cubes) {
+      if (cubes.length === 0) return "";
+      let minX = Math.min(...cubes.map(c => c.x));
+      let minY = Math.min(...cubes.map(c => c.y));
+      let minZ = Math.min(...cubes.map(c => c.z));
+      let normalized = cubes.map(c => `${c.x - minX},${c.y - minY},${c.z - minZ}`);
+      return normalized.sort().join('|');
+    }
+
+    function generateUniqueShape(targetCount) {
+      let attempts = 0;
+      while (attempts < 200) {
+        let H = { "0,0": 1 };
+        let currentCount = 1;
+        let keys = ["0,0"];
+        
+        while (currentCount < targetCount) {
+          let candidates = [];
+          // Can grow upwards
+          for (let key of keys) {
+            if (H[key] < 4) candidates.push({ type: 'up', key: key });
+          }
+          // Can grow outwards
+          let dirs = [[1,0], [-1,0], [0,1], [0,-1]];
+          for (let key of keys) {
+            let [x, y] = key.split(',').map(Number);
+            for (let d of dirs) {
+              let nx = x + d[0], ny = y + d[1];
+              let nKey = `${nx},${ny}`;
+              if (!H[nKey]) {
+                // keep it compact
+                if (Math.abs(nx) <= 3 && Math.abs(ny) <= 3) {
+                  candidates.push({ type: 'out', key: nKey });
+                }
+              }
+            }
+          }
+          
+          if (candidates.length === 0) break;
+          
+          let pick = candidates[Math.floor(Math.random() * candidates.length)];
+          if (pick.type === 'up') {
+            H[pick.key]++;
+          } else {
+            H[pick.key] = 1;
+            keys.push(pick.key);
+          }
+          currentCount++;
+        }
+        
+        if (currentCount === targetCount) {
+          let valid = true;
+          // Verify that there are no cubes hidden from the isometric perspective
+          for (let key of keys) {
+            let [x, y] = key.split(',').map(Number);
+            let h = H[key];
+            let hFrontX = H[`${x+1},${y}`] || 0;
+            let hFrontY = H[`${x},${y+1}`] || 0;
+            let hFrontXY = H[`${x+1},${y+1}`] || 0;
+            
+            // Prevent cubes hidden in inner corners (blocked by taller cubes in front)
+            if (hFrontX >= h && hFrontY >= h && (hFrontX > h || hFrontY > h)) {
+              valid = false; break;
+            }
+            // Prevent cubes completely blocked by a taller cube directly in front
+            if (hFrontXY > h) {
+              valid = false; break;
+            }
+          }
+
+          if (valid) {
+            let cubes = [];
+            for (let key of keys) {
+              let [x, y] = key.split(',').map(Number);
+              for (let z = 0; z < H[key]; z++) {
+                cubes.push({ x, y, z });
+              }
+            }
+            let sig = getShapeSignature(cubes);
+            if (!generatedSignatures.has(sig)) {
+              generatedSignatures.add(sig);
+              return cubes;
+            }
+          }
+        }
+        attempts++;
+      }
+      return generateLineShape(targetCount);
+    }
+
+    function generateLineShape(n) {
+      let c = [];
+      for(let i=0; i<n; i++) c.push({x:i%3, y:Math.floor(i/3), z:0});
+      return c;
+    }
+
+    function generateQuestions() {
+      let list = [];
+      generatedSignatures.clear();
+      
+      // 4 Easy (7-12 cubes, 1cm^3)
+      for (let i = 0; i < 4; i++) {
+        let n = Math.floor(Math.random() * 6) + 7; // 7 to 12
+        list.push({ tier: 'easy', numCubes: n, unitVol: 1, type: 'standard', cubes: generateUniqueShape(n) });
+      }
+      
+      // 3 Medium (13-16 cubes, 1cm^3)
+      for (let i = 0; i < 3; i++) {
+        let n = Math.floor(Math.random() * 4) + 13; // 13 to 16
+        list.push({ tier: 'medium', numCubes: n, unitVol: 1, type: 'standard', cubes: generateUniqueShape(n) });
+      }
+      
+      // 3 Hard (7-16 cubes, varying volume)
+      for (let i = 0; i < 3; i++) {
+        let n = Math.floor(Math.random() * 10) + 7; // 7 to 16
+        let isEdgeBased = Math.random() > 0.5;
+        let v, e;
+        if (isEdgeBased) {
+          e = 2; v = 8;
+        } else {
+          v = Math.floor(Math.random() * 8) + 2; // 2 to 9
+        }
+        list.push({ 
+          tier: 'hard', numCubes: n, unitVol: v, edgeLength: e, 
+          type: isEdgeBased ? 'edge' : 'volume', cubes: generateUniqueShape(n) 
+        });
+      }
+      
+      // Sort by difficulty: easy -> med -> hard
+      const order = { 'easy': 1, 'medium': 2, 'hard': 3 };
+      list.sort((a, b) => order[a.tier] - order[b.tier]);
+      
+      // Assign target answer and palette
+      list.forEach((q, idx) => {
+        q.targetAns = q.numCubes * q.unitVol;
+        q.color = palettes[idx % palettes.length];
+      });
+      
+      return list;
+    }
+
+    // SVG Rendering Logic
+    function renderSolidToSVG(cubes, colorObj, explodedGap = 0) {
+      // Isometric projection constants
+      const W = 38; // Tile width
+      const H = 19; // Tile height (half W for typical isometric)
+      const Z = 22; // Cube physical height block
+      
+      // Sort cubes using painter's algorithm: Back to front
+      // In our coordinate system: smaller x and smaller y are "back"
+      // smaller z is "bottom". So sort by (x + y + z)
+      let sortedCubes = [...cubes].sort((a, b) => {
+        let va = a.x + a.y + a.z;
+        let vb = b.x + b.y + b.z;
+        if (va !== vb) return va - vb;
+        if (a.z !== b.z) return a.z - b.z;
+        if (a.x !== b.x) return a.x - b.x;
+        return a.y - b.y;
+      });
+
+      // Calculate bounding box to center the SVG
+      let minSx = Infinity, maxSx = -Infinity, minSy = Infinity, maxSy = -Infinity;
+      
+      sortedCubes.forEach(c => {
+        let sx = (c.x - c.y) * (W/2);
+        let sy = (c.x + c.y) * (H/2) - (c.z * Z) - (c.z * explodedGap);
+        // Approximate bounds including cube dimensions
+        minSx = Math.min(minSx, sx - W/2); maxSx = Math.max(maxSx, sx + W/2);
+        minSy = Math.min(minSy, sy - Z);   maxSy = Math.max(maxSy, sy + H);
+      });
+
+      let svgW = explodedGap > 0 ? 250 : 400; 
+      let svgH = explodedGap > 0 ? 300 : 300;
+      let offsetX = svgW/2 - (minSx + maxSx)/2;
+      let offsetY = svgH/2 - (minSy + maxSy)/2;
+      // Slight vertical adjustment to center better
+      offsetY += 10;
+
+      let paths = '';
+      
+      let cTop = colorObj.top;
+      let cLeft = colorObj.left;
+      let cRight = colorObj.right;
+      let cStroke = colorObj.stroke;
+      
+      sortedCubes.forEach(c => {
+        let cx = offsetX + (c.x - c.y) * (W/2);
+        let cy = offsetY + (c.x + c.y) * (H/2) - (c.z * Z) - (c.z * explodedGap);
+        
+        // Define corners
+        let top = `${cx},${cy}`;
+        let right = `${cx + W/2},${cy + H/2}`;
+        let bottom = `${cx},${cy + H}`;
+        let left = `${cx - W/2},${cy + H/2}`;
+        
+        let bRight = `${cx + W/2},${cy + H/2 + Z}`;
+        let bBottom = `${cx},${cy + H + Z}`;
+        let bLeft = `${cx - W/2},${cy + H/2 + Z}`;
+
+        // Top face
+        paths += `<polygon points="${top} ${right} ${bottom} ${left}" fill="${cTop}" stroke="${cStroke}" stroke-width="1.5" stroke-linejoin="round"/>`;
+        // Left face
+        paths += `<polygon points="${left} ${bottom} ${bBottom} ${bLeft}" fill="${cLeft}" stroke="${cStroke}" stroke-width="1.5" stroke-linejoin="round"/>`;
+        // Right face
+        paths += `<polygon points="${bottom} ${right} ${bRight} ${bBottom}" fill="${cRight}" stroke="${cStroke}" stroke-width="1.5" stroke-linejoin="round"/>`;
+      });
+
+      return `<svg width="100%" height="100%" viewBox="0 0 ${svgW} ${svgH}" preserveAspectRatio="xMidYMid meet">${paths}</svg>`;
+    }
+
+
+    function startQuiz() {
+      questions = generateQuestions();
+      currentQIndex = 0; wrongAttempts = 0; records = []; startTimeObj = new Date();
+
+      document.getElementById('page-home').classList.add('hidden');
+      document.getElementById('page-report').classList.add('hidden');
+      document.getElementById('page-quiz').classList.remove('hidden');
+      loadQuestion();
+    }
+
+    function loadQuestion() {
+      wrongAttempts = 0;
+      const card = document.querySelector('.quiz-card');
+      if (card) card.classList.remove('shake-animation');
+
+      const t = i18n[currentLang], q = questions[currentQIndex];
+      document.getElementById('quiz-progress-text').innerText = `${t.qProgress} ${currentQIndex + 1} / 10`;
+
+      const tierTag = document.getElementById('quiz-tier-tag');
+      if(q.tier === 'easy') { tierTag.innerText = t.tierEasy; tierTag.className = "tier-tag tier-easy"; }
+      else if(q.tier === 'medium') { tierTag.innerText = t.tierMed; tierTag.className = "tier-tag tier-med"; }
+      else { tierTag.innerText = t.tierHard; tierTag.className = "tier-tag tier-hard"; }
+
+      // Set Question Text
+      let qTextStr = "";
+      if (q.tier === 'easy' || q.tier === 'medium') {
+        qTextStr = t.qTextEasyMed;
+      } else {
+        if (q.type === 'edge') qTextStr = t.qTextHardEdge.replace('{e}', q.edgeLength);
+        else qTextStr = t.qTextHardVol.replace('{v}', q.unitVol);
+      }
+      document.getElementById('q-text').innerText = qTextStr;
+      
+      // Render SVG
+      document.getElementById('svg-wrap').innerHTML = renderSolidToSVG(q.cubes, q.color);
+
+      // Reset Input
+      const inputEl = document.getElementById('input-answer');
+      inputEl.value = '';
+      inputEl.disabled = false;
+      document.getElementById('lbl-vol-prefix').innerText = t.volPrefix;
+
+      document.getElementById('feedback-area').classList.add('hidden');
+      document.getElementById('feedback-area').innerHTML = '';
+      document.getElementById('btn-submit').classList.remove('hidden');
+      document.getElementById('btn-next').classList.add('hidden');
+      document.getElementById('btn-submit').innerText = t.submitBtn;
+      
+      // Focus input after slight delay for mobile devices
+      setTimeout(() => inputEl.focus(), 100);
+    }
+
+    function checkAnswer() {
+      const q = questions[currentQIndex], t = i18n[currentLang], feedback = document.getElementById('feedback-area');
+      const inputEl = document.getElementById('input-answer');
+      
+      // Strip non-numeric characters before validation
+      inputEl.value = inputEl.value.replace(/[^0-9]/g, '');
+      const valStr = inputEl.value.trim();
+      
+      if (valStr === '') {
+        showCustomModal(currentLang==='zh'?"提示":"Notice", t.emptyInputMsg, null, false);
+        return;
+      }
+      
+      const userAns = parseInt(valStr, 10);
+      const isCorrect = (userAns === q.targetAns);
+
+      if(!records[currentQIndex]) {
+        records[currentQIndex] = { 
+          qIndex: currentQIndex + 1, tier: q.tier, questionObj: q, 
+          targetAns: q.targetAns, userFirstWrong: null, isCorrectOnFirstTry: false, solved: false 
+        };
+      }
+
+      if (isCorrect) {
+        if(wrongAttempts === 0) records[currentQIndex].isCorrectOnFirstTry = true;
+        records[currentQIndex].solved = true;
+        feedback.className = "feedback-box feedback-success";
+        feedback.innerHTML = `<strong>${t.praise[Math.floor(Math.random() * t.praise.length)]}</strong>`;
+        feedback.classList.remove('hidden');
+        inputEl.disabled = true;
+        document.getElementById('btn-submit').classList.add('hidden');
+        document.getElementById('btn-next').classList.remove('hidden'); document.getElementById('btn-next').focus();
+      } else {
+        wrongAttempts++;
+        if(records[currentQIndex].userFirstWrong === null) records[currentQIndex].userFirstWrong = userAns;
+        triggerShakeAnimation();
+
+        // Create exploded diagram HTML (reusable for both first and second wrong attempts)
+        let explodedSvg = renderSolidToSVG(q.cubes, q.color, 45); // 45px gap separating height levels
+        let originalSvg = renderSolidToSVG(q.cubes, q.color, 0);
+        
+        let visualHTML = `
+          <div class="breakdown-container">
+            <div style="width: 150px; height: 180px;">${originalSvg}</div>
+            <div class="thought-dots">
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+            <div class="thought-bubble" style="width: 180px; height: 210px;">
+              ${explodedSvg}
+            </div>
+          </div>
+        `;
+
+        if (wrongAttempts >= 2) {
+          records[currentQIndex].isCorrectOnFirstTry = false; records[currentQIndex].solved = false;
+          
+          let breakdown = "";
+          if (q.tier === 'easy' || q.tier === 'medium') {
+            breakdown = currentLang === 'zh' ? 
+              `這圖形共有 <strong>${q.numCubes}</strong> 粒。<br>每粒體積是 1 cm³，所以總體積 = <strong>${q.numCubes} cm³</strong>。` :
+              `There are <strong>${q.numCubes}</strong> cubes.<br>Each is 1 cm³, so total = <strong>${q.numCubes} cm³</strong>.`;
+          } else {
+            let unitStr = q.type === 'edge' ? 
+              (currentLang === 'zh' ? `邊長 ${q.edgeLength}cm 的數粒體積 = ${q.edgeLength}×${q.edgeLength}×${q.edgeLength} = <strong>${q.unitVol} cm³</strong>` : `Cube vol with edge ${q.edgeLength}cm = ${q.edgeLength}×${q.edgeLength}×${q.edgeLength} = <strong>${q.unitVol} cm³</strong>`) :
+              (currentLang === 'zh' ? `每粒體積 = <strong>${q.unitVol} cm³</strong>` : `Each cube vol = <strong>${q.unitVol} cm³</strong>`);
+              
+            breakdown = currentLang === 'zh' ?
+              `1. 這圖形共有 <strong>${q.numCubes}</strong> 粒。<br>2. ${unitStr}。<br>3. 總體積 = ${q.numCubes} × ${q.unitVol} = <strong>${q.targetAns} cm³</strong>。` :
+              `1. There are <strong>${q.numCubes}</strong> cubes.<br>2. ${unitStr}.<br>3. Total volume = ${q.numCubes} × ${q.unitVol} = <strong>${q.targetAns} cm³</strong>.`;
+          }
+
+          feedback.className = "feedback-box feedback-danger"; 
+          feedback.innerHTML = `<div><strong>${t.stepTitle}</strong></div><div style="margin-top:8px;">${breakdown}</div>${visualHTML}`; 
+          feedback.classList.remove('hidden');
+          inputEl.value = q.targetAns; // Show correct answer
+          inputEl.style.color = '#333';
+          inputEl.disabled = true;
+          document.getElementById('btn-submit').classList.add('hidden');
+          document.getElementById('btn-next').classList.remove('hidden'); document.getElementById('btn-next').focus();
+        } else {
+          feedback.className = "feedback-box feedback-warning";
+          feedback.innerHTML = `<div style="margin-bottom: 15px; text-align: center; font-size: 1.1rem;"><strong>${t.encourage[Math.floor(Math.random() * t.encourage.length)]}</strong></div>${visualHTML}`; 
+          feedback.classList.remove('hidden');
+          inputEl.value = '';
+          inputEl.focus();
+        }
+      }
+    }
+
+    function triggerShakeAnimation() {
+      const card = document.querySelector('.quiz-card');
+      if(card) { card.classList.remove('shake-animation'); void card.offsetWidth; card.classList.add('shake-animation'); }
+    }
+
+    function toggleLanguage() {
+      currentLang = currentLang === 'zh' ? 'en' : 'zh'; const t = i18n[currentLang];
+      document.getElementById('header-title').innerText = t.headerTitle; document.getElementById('btn-lang').innerText = t.langBtn;
+      document.getElementById('home-subtitle').innerText = t.homeSubtitle; 
+      document.getElementById('title-unit1').innerText = t.titleUnit1;
+      document.getElementById('desc-opt1').innerText = t.descOpt1;
+      document.getElementById('lbl-back-btn').innerText = t.backBtn;
+      if (!document.getElementById('page-quiz').classList.contains('hidden')) loadQuestion();
+    }
+
+    function nextQuestion() { currentQIndex++; if (currentQIndex < questions.length) loadQuestion(); else showReport(); }
+
+    function showReport() {
+      const end = new Date(), t = i18n[currentLang];
+      document.getElementById('page-quiz').classList.add('hidden'); document.getElementById('page-report').classList.remove('hidden');
+      document.getElementById('report-main-title').innerText = t.reportTitle; document.getElementById('lbl-start-time').innerText = t.startTime;
+      document.getElementById('lbl-end-time').innerText = t.endTime; document.getElementById('lbl-duration').innerText = t.durationTime;
+      document.getElementById('lbl-total-correct').innerText = t.totalCorrect; document.getElementById('lbl-accuracy').innerText = t.accuracy;
+      document.getElementById('lbl-mastery-title').innerText = t.masteryTitle;
+      
+      document.getElementById('lbl-tier1-mastery').innerText = t.tier1Mastery;
+      document.getElementById('lbl-tier2-mastery').innerText = t.tier2Mastery;
+      document.getElementById('lbl-tier3-mastery').innerText = t.tier3Mastery;
+      document.getElementById('lbl-correct-title').innerText = t.correctTitle; document.getElementById('lbl-wrong-title').innerText = t.wrongTitle;
+      document.getElementById('lbl-btn-download').innerText = t.btnDownload; document.getElementById('lbl-btn-retry').innerText = t.btnRetry;
+      document.getElementById('lbl-btn-home').innerText = t.btnHome;
+      
+      const pad = n => String(n).padStart(2, '0');
+      document.getElementById('val-start-time').innerText = `${pad(startTimeObj.getHours())}:${pad(startTimeObj.getMinutes())}:${pad(startTimeObj.getSeconds())}`;
+      document.getElementById('val-end-time').innerText = `${pad(end.getHours())}:${pad(end.getMinutes())}:${pad(end.getSeconds())}`;
+      let ds = Math.floor((end - startTimeObj) / 1000);
+      document.getElementById('val-duration').innerText = currentLang === 'zh' ? `${Math.floor(ds/60)} 分 ${ds%60} 秒` : `${Math.floor(ds/60)}m ${ds%60}s`;
+
+      let tc=0, t1c=0, t2c=0, t3c=0, t1t=0, t2t=0, t3t=0;
+      records.forEach(r => {
+        if(!r) return;
+        if(r.tier === 'easy') t1t++; if(r.tier === 'medium') t2t++; if(r.tier === 'hard') t3t++;
+        if(r.isCorrectOnFirstTry) { tc++; if(r.tier==='easy') t1c++; if(r.tier==='medium') t2c++; if(r.tier==='hard') t3c++; }
+      });
+
+      document.getElementById('val-correct-count').innerText = `${tc} / ${questions.length}`;
+      document.getElementById('val-accuracy').innerText = `${Math.round((tc/questions.length)*100)}%`;
+      document.getElementById('val-tier1-mastery').innerText = `${t1c} / ${t1t}`;
+      document.getElementById('val-tier2-mastery').innerText = `${t2c} / ${t2t}`;
+      document.getElementById('val-tier3-mastery').innerText = `${t3c} / ${t3t}`;
+
+      const correctContainer = document.getElementById('correct-list-container');
+      correctContainer.innerHTML = '';
+      const correctItems = records.filter(r => r && r.isCorrectOnFirstTry);
+      if (correctItems.length === 0) {
+        correctContainer.innerHTML = `<div style="font-size:0.95rem; color:#718096; padding-left:5px;">${t.noCorrect}</div>`;
+      } else {
+        correctItems.forEach(item => {
+          const qText = t.questionLabel.replace('{n}', item.qIndex);
+          const detail = currentLang === 'zh' ? `(${item.questionObj.numCubes}粒, 每粒${item.questionObj.unitVol}cm³)` : `(${item.questionObj.numCubes} cubes, ${item.questionObj.unitVol}cm³ ea)`;
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'item-card-correct';
+          itemDiv.innerHTML = `<div class="item-q-title">${qText} <span style="font-weight:normal; font-size:0.85rem; color:#4a5568;">${detail}</span></div><div class="item-ans-text">${t.ansLabel} : ${item.targetAns} cm³</div>`;
+          correctContainer.appendChild(itemDiv);
+        });
+      }
+
+      const wrongContainer = document.getElementById('wrong-list-container');
+      wrongContainer.innerHTML = '';
+      const wrongItems = records.filter(r => !r || !r.isCorrectOnFirstTry);
+      if (wrongItems.length === 0) {
+        wrongContainer.innerHTML = `<div style="font-size:0.95rem; color:#38a169; padding-left:5px;">${t.noWrong}</div>`;
+      } else {
+        wrongItems.forEach(item => {
+          if (!item) return;
+          const qText = t.questionLabel.replace('{n}', item.qIndex);
+          const detail = currentLang === 'zh' ? `(${item.questionObj.numCubes}粒, 每粒${item.questionObj.unitVol}cm³)` : `(${item.questionObj.numCubes} cubes, ${item.questionObj.unitVol}cm³ ea)`;
+          const userAnsDisplay = item.userFirstWrong !== null ? `${item.userFirstWrong} cm³` : '-';
+          const itemDiv = document.createElement('div');
+          itemDiv.className = 'item-card-wrong';
+          itemDiv.innerHTML = `
+            <div style="display:flex; justify-content:space-between; width:100%;">
+                <div class="item-q-title">${qText} <span style="font-weight:normal; font-size:0.85rem; color:#4a5568;">${detail}</span></div>
+                <div class="item-ans-text">${t.correctAnsLabel} : <span style="color:#22543d; font-weight:bold;">${item.targetAns} cm³</span></div>
+            </div>
+            <div class="wrong-ans-detail">${t.yourAnsLabel} : ${userAnsDisplay}</div>
+          `;
+          wrongContainer.appendChild(itemDiv);
+        });
+      }
+    }
+
+    function goHome() {
+      document.getElementById('page-report').classList.add('hidden');
+      document.getElementById('page-quiz').classList.add('hidden');
+      document.getElementById('page-home').classList.remove('hidden');
+    }
+
+    function askReturnHome() {
+      const t = i18n[currentLang];
+      showCustomModal(t.modalReturnTitle, t.modalReturnMsg, () => { goHome(); }, true);
+    }
+
+    function showCustomModal(title, msg, onConfirm, showCancel = true) {
+      document.getElementById('modal-title').innerText = title;
+      document.getElementById('modal-msg').innerText = msg;
+      modalActionCallback = onConfirm;
+      const cancelBtn = document.getElementById('modal-cancel-btn');
+      if (showCancel) cancelBtn.classList.remove('hidden'); else cancelBtn.classList.add('hidden');
+      document.getElementById('custom-modal').classList.add('active');
+    }
+
+    function closeModal() {
+      document.getElementById('custom-modal').classList.remove('active');
+      modalActionCallback = null;
+    }
+
+    function confirmModalAction() {
+      if (modalActionCallback) modalActionCallback();
+      closeModal();
+    }
+
+    function downloadReportImage() {
+      const reportElement = document.getElementById('report-card-to-capture');
+      if (typeof html2canvas !== 'undefined') {
+        html2canvas(reportElement, { scale: 2 }).then(canvas => {
+          const link = document.createElement('a');
+          link.download = `Volume_Report_${Date.now()}.png`;
+          link.href = canvas.toDataURL('image/png');
+          link.click();
+        });
+      }
+    }
+  </script>
+</body>
+</html>
