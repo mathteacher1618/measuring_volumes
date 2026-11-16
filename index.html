@@ -542,6 +542,14 @@
       inputAns.addEventListener('input', function(e) {
         this.value = this.value.replace(/[^0-9]/g, '');
       });
+      
+      // Handle Enter key when modal is open
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter' && document.getElementById('custom-modal').classList.contains('active')) {
+          e.preventDefault();
+          confirmModalAction();
+        }
+      });
     };
 
     // Shape Generation Logic
@@ -554,9 +562,85 @@
       return normalized.sort().join('|');
     }
 
+    // 2D Geometric Point in Polygon Test
+    function pointInPolygon(px, py, poly) {
+      let inside = false;
+      for (let i = 0, j = poly.length - 1; i < poly.length; j = i++) {
+        let xi = poly[i][0], yi = poly[i][1];
+        let xj = poly[j][0], yj = poly[j][1];
+        let intersect = ((yi > py) !== (yj > py))
+            && (px < (xj - xi) * (py - yi) / (yj - yi) + xi);
+        if (intersect) inside = !inside;
+      }
+      return inside;
+    }
+
+    // Rigorous visibility check based on actual SVG projection geometry
+    function isShapeValid(cubes) {
+      let columns = {};
+      cubes.forEach(c => {
+        let key = `${c.x},${c.y}`;
+        if (columns[key] === undefined || c.z > columns[key]) columns[key] = c.z;
+      });
+
+      const W = 38, H = 19, Z = 22;
+      
+      let sortedCubes = [...cubes].sort((a, b) => {
+        let va = a.x + a.y + a.z;
+        let vb = b.x + b.y + b.z;
+        if (va !== vb) return va - vb;
+        if (a.z !== b.z) return a.z - b.z;
+        if (a.x !== b.x) return a.x - b.x;
+        return a.y - b.y;
+      });
+
+      for (let key in columns) {
+        let [x, y] = key.split(',').map(Number);
+        let z = columns[key];
+        
+        let cx = (x - y) * (W/2);
+        let cy = (x + y) * (H/2) - (z * Z);
+        
+        // 11 test points on the visible faces of the topmost cube (slightly inset)
+        let testPoints = [
+          [cx, cy + H/2], [cx, cy + H/4 + 2], [cx, cy + 3*H/4 - 2], [cx - W/4 + 2, cy + H/2], [cx + W/4 - 2, cy + H/2], // Top face
+          [cx - W/4, cy + 3*H/4 + Z/2], [cx - W/4, cy + 3*H/4 + Z/4 + 2], [cx - W/4, cy + 3*H/4 + 3*Z/4 - 2], // Left face
+          [cx + W/4, cy + 3*H/4 + Z/2], [cx + W/4, cy + 3*H/4 + Z/4 + 2], [cx + W/4, cy + 3*H/4 + 3*Z/4 - 2]  // Right face
+        ];
+
+        let cubeIdx = sortedCubes.findIndex(c => c.x === x && c.y === y && c.z === z);
+        let pointsVisible = testPoints.length;
+        
+        for (let pt of testPoints) {
+          let isCovered = false;
+          // Check if this point is covered by ANY cube drawn in front of it
+          for (let i = cubeIdx + 1; i < sortedCubes.length; i++) {
+            let oc = sortedCubes[i];
+            let ox = (oc.x - oc.y) * (W/2);
+            let oy = (oc.x + oc.y) * (H/2) - (oc.z * Z);
+            
+            let poly = [
+              [ox, oy], [ox + W/2, oy + H/2], [ox + W/2, oy + H/2 + Z],
+              [ox, oy + H + Z], [ox - W/2, oy + H/2 + Z], [ox - W/2, oy + H/2]
+            ];
+            
+            if (pointInPolygon(pt[0], pt[1], poly)) {
+              isCovered = true;
+              break;
+            }
+          }
+          if (isCovered) pointsVisible--;
+        }
+        
+        // If all 11 test points are covered, this column's topmost cube is 100% hidden and not deducible
+        if (pointsVisible === 0) return false;
+      }
+      return true;
+    }
+
     function generateUniqueShape(targetCount) {
       let attempts = 0;
-      while (attempts < 200) {
+      while (attempts < 1000) {
         let H = { "0,0": 1 };
         let currentCount = 1;
         let keys = ["0,0"];
@@ -596,33 +680,15 @@
         }
         
         if (currentCount === targetCount) {
-          let valid = true;
-          // Verify that there are no cubes hidden from the isometric perspective
+          let cubes = [];
           for (let key of keys) {
             let [x, y] = key.split(',').map(Number);
-            let h = H[key];
-            let hFrontX = H[`${x+1},${y}`] || 0;
-            let hFrontY = H[`${x},${y+1}`] || 0;
-            let hFrontXY = H[`${x+1},${y+1}`] || 0;
-            
-            // Prevent cubes hidden in inner corners (blocked by taller cubes in front)
-            if (hFrontX >= h && hFrontY >= h && (hFrontX > h || hFrontY > h)) {
-              valid = false; break;
-            }
-            // Prevent cubes completely blocked by a taller cube directly in front
-            if (hFrontXY > h) {
-              valid = false; break;
+            for (let z = 0; z < H[key]; z++) {
+              cubes.push({ x, y, z });
             }
           }
-
-          if (valid) {
-            let cubes = [];
-            for (let key of keys) {
-              let [x, y] = key.split(',').map(Number);
-              for (let z = 0; z < H[key]; z++) {
-                cubes.push({ x, y, z });
-              }
-            }
+          
+          if (isShapeValid(cubes)) {
             let sig = getShapeSignature(cubes);
             if (!generatedSignatures.has(sig)) {
               generatedSignatures.add(sig);
@@ -1002,6 +1068,9 @@
     }
 
     function showCustomModal(title, msg, onConfirm, showCancel = true) {
+      // Remove focus from input to prevent background typing
+      if(document.activeElement) document.activeElement.blur();
+      
       document.getElementById('modal-title').innerText = title;
       document.getElementById('modal-msg').innerText = msg;
       modalActionCallback = onConfirm;
